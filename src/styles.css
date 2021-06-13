@@ -1,4 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.card-app {
+  border-radius: 4px;
+  margin: 24px 0;
+  border: 1px solid hsla(0, 0%, 100%, .2);
+}
+
+.sanck-bar-success {
+  background-color: darkolivegreen;
+  color: white;
+  font-size: 14px;
+  font: bold;
+}
+
+.sanck-bar-danger {
+  background-color: crimson;
+  color: black;
+  font-size: 14px;
+  font: bold;
+}

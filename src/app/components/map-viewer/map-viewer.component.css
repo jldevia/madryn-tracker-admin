@@ -1,0 +1,27 @@
+.map {
+  margin: 2px;
+  height: 642px;
+}
+
+.selector {
+  margin-right: 18px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 80% 20%;
+  column-gap: 5px;
+}
+
+.panel-lateral {
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.panel-lateral h3 {
+  color: cornflowerblue;
+}
+
+.panel-lateral mat-label {
+  font-style: italic;
+}

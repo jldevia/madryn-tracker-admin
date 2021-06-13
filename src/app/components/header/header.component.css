@@ -1,0 +1,18 @@
+#title {
+  margin: 10px;
+}
+
+.brand-image {
+  margin-top: -.5rem;
+  margin-right: .05rem;
+  margin-left: 1rem;
+  height: 38px;
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.elevation-3 {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23) !important;
+}

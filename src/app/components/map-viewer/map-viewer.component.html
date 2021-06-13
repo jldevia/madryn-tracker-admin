@@ -1,0 +1,41 @@
+<mat-card class="card-app">
+  <mat-card-title>Puerto Madryn</mat-card-title>
+  <mat-card-subtitle>
+    <div align="end">
+      <mat-form-field class="selector">
+        <mat-label>Categor&iacute;a</mat-label>
+        <mat-select (selectionChange)="onCategoryChanged($event)">
+          <mat-option *ngFor="let category of categories" [value]="category.id">
+            {{category.nombre}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="selector">
+        <mat-label>Subcategor&iacute;a</mat-label>
+        <mat-select (selectionChange)="onSubCategoryChanged($event)">
+          <mat-option *ngFor="let subCategory of subCategories" [value]="subCategory.id">
+            {{subCategory.nombre}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div class="grid-container">
+      <div id="map" class="map"></div>
+      <mat-list class="panel-lateral">
+        <mat-list-item *ngFor="let site of sites">
+          <h3 mat-line>{{site.name}}</h3>
+          <mat-label mat-line>{{site.address}}</mat-label>
+          <button mat-icon-button (click)="onUpdateSite(site)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onDeleteSite(site)">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>

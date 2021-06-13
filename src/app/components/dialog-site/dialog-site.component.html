@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+  <form>
+    <mat-form-field class="input-form">
+      <mat-label>Nombre</mat-label>
+      <input matInput required=true placeholder="Nombre del sitio de interes ...." [(ngModel)]="data.site.name"
+        name="name">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Descripci&oacute;n</mat-label>
+      <input matInput placeholder="Descripción del sitio de interes ...." [(ngModel)]="data.site.description"
+        name="description">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Direcci&oacute;n</mat-label>
+      <input matInput required=true placeholder="Dirección del sitio de interes ...." [(ngModel)]="data.site.address"
+        name="address">
+    </mat-form-field>
+    <div class="input-form">
+      <mat-label>Puntuaci&oacute;n</mat-label>
+    </div>
+    <mat-slider [disabled]="false" [min]="0" [max]="5" [step]="0.5" [thumbLabel]="true" [tickInterval]="0.5"
+      [(ngModel)]="data.site.ranking" name="ranking">
+    </mat-slider>
+    <mat-label class="label-ranking">{{data.site.ranking}}</mat-label>
+    <mat-form-field class="input-form">
+      <mat-label>Horario de Atenci&oacute;n</mat-label>
+      <input matInput placeholder="Horario de atención" type="text" [(ngModel)]="data.site.hoursAttention"
+        name="horarioAtencion">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Latitud</mat-label>
+      <input matInput required=true placeholder="Latitud" type="number" [(ngModel)]="data.site.latitude" name="latitud">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Longitud</mat-label>
+      <input matInput required=true placeholder="Longitud" type="number" [(ngModel)]="data.site.longitude"
+        name="longitud">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Telefono 1</mat-label>
+      <input matInput required=true placeholder="N° telefono" type="tel" [(ngModel)]="data.site.phone1"
+        name="telefono1">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Telefono 2</mat-label>
+      <input matInput placeholder="N° telefono" type="tel" [(ngModel)]="data.site.phone2" name="telefono2">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Dirección de email" type="email" [(ngModel)]="data.site.email" name="email">
+    </mat-form-field>
+    <mat-form-field class="input-form">
+      <mat-label>Sitio Web</mat-label>
+      <input matInput placeholder="Dirección del sitio web" type="email" [(ngModel)]="data.site.web" name="web">
+    </mat-form-field>
+    <mat-form-field id="selectCategories" class="input-form">
+      <mat-label>Subcategor&iacute;a</mat-label>
+      <mat-select [(value)]="data.site.subCategoryId">
+        <mat-option *ngFor="let item of data.subcategories" [value]="item.id">
+          {{item.nombre}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [mat-dialog-close]="data">Aceptar</button>
+</mat-dialog-actions>

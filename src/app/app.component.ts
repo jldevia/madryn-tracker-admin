@@ -6,5 +6,26 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'Consola de administración del proyecto Madryn Tracker!!';
+  public itemsMenu = [
+    {
+      title: 'Categorias',
+      icon: 'navigate_next',
+      link: '/categories',
+    },
+    {
+      title: 'Sub Categorias',
+      icon: 'navigate_next',
+      link: '/subcategories',
+    },
+    {
+      title: 'Sitios de Interes',
+      icon: 'assistant_direction',
+      link: '/map',
+    },
+    {
+      title: 'Usuarios',
+      icon: 'supervised_user_circle',
+      link: '/usuarios',
+    },
+  ];
 }
