@@ -1,6 +1,6 @@
-# MadryntrackerAdminFront
+# Madryn Tracker Admin
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.10.
+Proyecto para la asignatura "Taller de nuevas tecnologías". Frontend construido con angular 11.
 
 ## Development server
 
