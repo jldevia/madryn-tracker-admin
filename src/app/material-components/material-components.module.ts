@@ -16,27 +16,29 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const MaterialComponents = [
-  MatButtonModule,
-  MatIconModule,
-  MatSidenavModule,
-  MatToolbarModule,
-  MatListModule,
-  MatCardModule,
-  MatTableModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatSnackBarModule,
-  MatSelectModule,
-  MatSliderModule,
-  MatGridListModule,
-  MatSlideToggleModule,
+	MatButtonModule,
+	MatIconModule,
+	MatSidenavModule,
+	MatToolbarModule,
+	MatListModule,
+	MatCardModule,
+	MatTableModule,
+	MatDialogModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatSnackBarModule,
+	MatSelectModule,
+	MatSliderModule,
+	MatGridListModule,
+	MatSlideToggleModule,
+	MatProgressSpinnerModule
 ];
 
 @NgModule({
-  imports: [MaterialComponents],
-  exports: [MaterialComponents],
+	imports: [MaterialComponents],
+	exports: [MaterialComponents]
 })
 export class MaterialComponentsModule {}

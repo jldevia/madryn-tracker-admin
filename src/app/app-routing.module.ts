@@ -5,13 +5,13 @@ import { ListSubcategoriesComponent } from './components/list-subcategories/list
 import { MapViewerComponent } from './components/map-viewer/map-viewer.component';
 
 const routes: Routes = [
-  { path: 'categories', component: ListCategoriesComponent },
-  { path: 'subcategories', component: ListSubcategoriesComponent },
-  { path: 'map', component: MapViewerComponent },
+	{ path: 'categories', component: ListCategoriesComponent },
+	{ path: 'subcategories', component: ListSubcategoriesComponent },
+	{ path: 'map', component: MapViewerComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forRoot(routes)],
+	exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

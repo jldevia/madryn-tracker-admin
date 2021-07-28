@@ -18,3 +18,7 @@ a {
 a:hover {
   color: lightcoral;
 }
+
+.progress {
+  margin: 0 10px;
+}

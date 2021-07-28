@@ -1,0 +1,140 @@
+{
+  "categories": [
+    {
+      "id": "xmshsh125",
+      "nombre": "Categoria 1",
+      "descripcion": "Descripción de categoría 1"
+    },
+    {
+      "id": "xmshsh587",
+      "nombre": "Categoria 2",
+      "descripcion": "Descripción de categoría 2"
+    },
+    {
+      "id": "xmshsh955",
+      "nombre": "Categoria 3",
+      "descripcion": "Descripción de categoría 3"
+    },
+    {
+      "id": "xmshsh741",
+      "nombre": "Categoria 4",
+      "descripcion": "Descripción de categoría 4"
+    },
+    {
+      "nombre": "Alojamiento",
+      "descripcion": "Alojamientos en general.",
+      "id": "XXXYYY41"
+    },
+    {
+      "id": "XXXYYY7",
+      "nombre": "Bares",
+      "descripcion": "Los diversos bares y pubs de la ciudad"
+    },
+    {
+      "id": "XXXYYY19",
+      "nombre": "Museos",
+      "descripcion": "Todos los museos de la ciudad"
+    },
+    {
+      "id": "XXXYYY13",
+      "nombre": "Categoria 10",
+      "descripcion": "Se modifico esta descripcion"
+    },
+    {
+      "id": "XXXYYY34",
+      "nombre": "Categoria 11",
+      "descripcion": "Descripción modificada"
+    }
+  ],
+  "subcategories": [
+    {
+      "id": "subx1",
+      "nombre": "SubCategoria 1",
+      "descripcion": "Descripción de sub-categoría 1",
+      "categoryId": "xmshsh125"
+    },
+    {
+      "id": "subx2",
+      "nombre": "SubCategoria 2",
+      "descripcion": "Descripción de sub-categoría 2",
+      "categoryId": "xmshsh125"
+    },
+    {
+      "id": "suby1",
+      "nombre": "SubCategoria 3",
+      "descripcion": "Descripción de sub-categoría 3",
+      "categoryId": "xmshsh587"
+    },
+    {
+      "id": "suby2",
+      "nombre": "SubCategoria 4",
+      "descripcion": "Descripción de sub-categoría 4",
+      "categoryId": "xmshsh587"
+    },
+    {
+      "id": "subz1",
+      "nombre": "SubCategoria 5",
+      "descripcion": "Descripción de sub-categoría 5",
+      "categoryId": "xmshsh741"
+    },
+    {
+      "id": "subz2",
+      "nombre": "SubCategoria 6",
+      "descripcion": "Descripción de sub-categoría 6",
+      "categoryId": "xmshsh741"
+    }
+  ],
+  "sites": [
+    {
+      "id": "0001",
+      "name": "Rayentray Puerto Madryn",
+      "description": "Hotel de convenciones y visitas al golfo",
+      "address": "Bv. Almte Brown 2889, Puerto Madryn, Chubut",
+      "ranking": 4.4,
+      "hoursAttention": "De 08:00 a 12:00 y 17:00 a 21:00 hrs.",
+      "latitude": -42.784870690256035,
+      "longitude": -65.00982935291576,
+      "image": null,
+      "phone1": "+542804459300",
+      "phone2": "",
+      "email": "",
+      "web": "http://www.cadenarayentray.com.ar/inicio-madryn",
+      "countVisits": 1554,
+      "subCategoryId": "subz1"
+    },
+    {
+      "id": "0002",
+      "name": "Parador Sur",
+      "description": "Abierto las 24 horas",
+      "address": "Bv. Almte Brown, Puerto Madryn, Chubut",
+      "ranking": 4,
+      "hoursAttention": "De 08:00 a 12:00 y 17:00 a 21:00 hrs.",
+      "latitude": -42.78274567688467,
+      "longitude": -65.01498466258289,
+      "image": null,
+      "phone1": "1148457751",
+      "phone2": "",
+      "email": "",
+      "web": "",
+      "countVisits": 525,
+      "subCategoryId": "subx2"
+    },
+    {
+      "id": "0003",
+      "name": "Kita's House",
+      "description": "Agencia de alquiler de alojamientos para vacaciones",
+      "address": "Bv. Almte Brown 2140, Puerto Madryn, Chubut",
+      "ranking": 4.7,
+      "hoursAttention": "De 08:00 a 12:00 y 17:00 a 21:00 hrs.",
+      "latitude": -42.78193061177774,
+      "longitude": -65.01659406000233,
+      "image": null,
+      "phone1": "+542804344021",
+      "phone2": "",
+      "email": "",
+      "web": "",
+      "countVisits": 25,
+      "subCategoryId": "subz1"
+    }
+  ]
+}

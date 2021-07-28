@@ -1,122 +1,116 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { DialogCategoryData } from 'src/app/models/dialogCategoyData';
+import { CategoryFBStore } from 'src/app/services/category/category-firebase.service';
 import { UtilService } from 'src/app/services/util.service';
 
 import { Category } from '../../models/category';
-import { CategoryMockService } from '../../services/category/category-mock.service';
 import { DialogCategoryComponent } from '../dialog-category/dialog-category.component';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 
 @Component({
-  selector: 'madryntracker-list-categories',
-  templateUrl: './list-categories.component.html',
-  styleUrls: ['./list-categories.component.css'],
+	selector: 'madryntracker-list-categories',
+	templateUrl: './list-categories.component.html',
+	styleUrls: ['./list-categories.component.css']
 })
-export class ListCategoriesComponent implements OnInit {
-  categories: Category[] = new Array<Category>();
-  displayedColumns = ['id', 'nombre', 'descripcion', 'editar', 'eliminar'];
-  categoriesObs: Observable<Category[]>;
+export class ListCategoriesComponent {
+	displayedColumns = ['id', 'nombre', 'descripcion', 'editar', 'eliminar'];
+	categories$!: Observable<Category[]>;
 
-  constructor(
-    private service: CategoryMockService,
-    private dialog: MatDialog,
-    private utilService: UtilService
-  ) {
-    this.categoriesObs = service.getCategories();
-  }
+	constructor(
+		private categoryService: CategoryFBStore,
+		private dialog: MatDialog,
+		private utilService: UtilService
+	) {
+		this.categories$ = this.categoryService.categoriesObservable;
+	}
 
-  ngOnInit(): void {
-    this.categoriesObs.subscribe({
-      next: (data) => (this.categories = data),
-    });
-  }
+	newCategory(): void {
+		const dialogReference = this.dialog.open(DialogCategoryComponent, {
+			width: '350px',
+			disableClose: true,
+			data: {
+				title: 'Nueva Categoría',
+				nombre: '',
+				descripcion: ''
+			}
+		});
 
-  newCategory(): void {
-    const dialogReference = this.dialog.open(DialogCategoryComponent, {
-      width: '350px',
-      disableClose: true,
-      data: {
-        title: 'Nueva Categoría',
-        nombre: '',
-        descripcion: '',
-      },
-    });
+		dialogReference.afterClosed().subscribe({
+			next: (result: DialogCategoryData) => {
+				if (result) {
+					this.categoryService
+						.addCategory({
+							id: result.id,
+							nombre: result.nombre,
+							descripcion: result.descripcion
+						})
+						.then((result: Category) => {
+							this.utilService.showMessageSuccess('Categoría creada.');
+						})
+						.catch((err) => {
+							console.error(err);
+							this.utilService.showMessageError(`Error al guardar nueva categoría.`);
+						});
+				}
+			}
+		});
+	}
 
-    dialogReference.afterClosed().subscribe({
-      next: (result) => {
-        if (result) {
-          this.service
-            .addCategory(result)
-            .then((result) => {
-              this.utilService.showSnackBar(result.msgOk);
-            })
-            .catch((result) => {
-              this.utilService.showSnackBar(
-                'Error al guardar nueva categoría.',
-                'danger'
-              );
-            });
-        }
-      },
-    });
-  }
+	editCategory(category: Category): void {
+		const dialogReference = this.dialog.open(DialogCategoryComponent, {
+			width: '350px',
+			disableClose: true,
+			data: {
+				title: 'Editando categoría',
+				nombre: category.nombre,
+				descripcion: category.descripcion
+			}
+		});
 
-  editCategory(category: Category): void {
-    const dialogReference = this.dialog.open(DialogCategoryComponent, {
-      width: '350px',
-      disableClose: true,
-      data: {
-        title: 'Editando categoría',
-        nombre: category.nombre,
-        descripcion: category.descripcion,
-      },
-    });
+		dialogReference.afterClosed().subscribe({
+			next: (result: DialogCategoryData) => {
+				if (result) {
+					const categoryEdit = {
+						id: category.id,
+						nombre: result.nombre,
+						descripcion: result.descripcion
+					} as Category;
+					this.categoryService
+						.editCategory(categoryEdit)
+						.then((result) => {
+							this.utilService.showMessageSuccess('Categoria modificada.');
+						})
+						.catch((err) => {
+							console.error(err);
+							this.utilService.showMessageError('Error al modificar categoría.');
+						});
+				}
+			}
+		});
+	}
 
-    dialogReference.afterClosed().subscribe({
-      next: (result) => {
-        if (result) {
-          let categoryEdit = {
-            id: category.id,
-            nombre: result.nombre,
-            descripcion: result.descripcion,
-          };
-          this.service
-            .editCategory(categoryEdit)
-            .then((success) => this.utilService.showSnackBar(success.msgOk))
-            .catch((err) =>
-              this.utilService.showSnackBar(
-                'Error al modificar categoría.',
-                'danger'
-              )
-            );
-        }
-      },
-    });
-  }
+	deleteCategory(category: Category): void {
+		const dialogReference = this.dialog.open(DialogDeleteComponent, {
+			width: '350px',
+			disableClose: true,
+			data: {
+				title: 'Eliminando Categoría',
+				message: 'Desea realmente eliminar esta categoría?'
+			}
+		});
 
-  deleteCategory(category: Category): void {
-    const dialogReference = this.dialog.open(DialogDeleteComponent, {
-      width: '350px',
-      disableClose: true,
-      data: {
-        title: 'Eliminando Categoría',
-        message: 'Desea realmente eliminar esta categoría?',
-      },
-    });
-
-    dialogReference.afterClosed().subscribe((result) => {
-      if (result) {
-        this.service
-          .deleteCategory(category)
-          .then((result) => this.utilService.showSnackBar(result.msgOk))
-          .catch((result) =>
-            this.utilService.showSnackBar(
-              'Error al eliminar categoría.',
-              'danger'
-            )
-          );
-      }
-    });
-  }
+		dialogReference.afterClosed().subscribe((result) => {
+			if (result) {
+				this.categoryService
+					.deleteCategory(category)
+					.then(() => this.utilService.showMessageSuccess('Categoría eliminada.'))
+					.catch((err) => {
+						console.error(err);
+						this.utilService.showMessageError('Error al eliminar categoría.');
+					});
+			}
+		});
+	}
 }

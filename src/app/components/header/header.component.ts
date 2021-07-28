@@ -1,16 +1,17 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'madryntracker-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
+	selector: 'madryntracker-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  @Output() public menuSideToggle = new EventEmitter();
+	@Output() public menuSideToggle = new EventEmitter();
 
-  constructor() {}
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	constructor() {}
 
-  public onToggleMenuSide = () => {
-    this.menuSideToggle.emit('menuSideToggleEvent');
-  };
+	public onToggleMenuSide = (): void => {
+		this.menuSideToggle.emit('menuSideToggleEvent');
+	};
 }

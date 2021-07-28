@@ -1,36 +1,35 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Category } from '../../models/category';
 import { Result } from '../../models/result';
 import { CategoryService } from './category.serv.interface';
-import { db } from './dbCategories';
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root'
 })
 export class CategoryMockService implements CategoryService {
-  private dbCategories: Category[];
-  private subject: BehaviorSubject<Category[]>;
+	private dbCategories!: Category[];
+	private subject: BehaviorSubject<Category[]>;
 
-  constructor() {
-    //Se crea la BD
-    this.dbCategories = db as Array<Category>;
-    this.subject = new BehaviorSubject<Category[]>(this.dbCategories);
-  }
-  getCategories(): Observable<Category[]> {
-    return this.subject;
-  }
-  addCategory(item: Category): Promise<Result> {
-    let intRandom = this._ramdonInt(1, 50);
-    item.id = `XXXYYY${intRandom}`;
-    this.dbCategories.push(item);
-    this.subject.next(this.dbCategories);
-    return Promise.resolve({
-      msgOk: 'Categoría creada.',
-    });
-  }
-  editCategory(item: Category): Promise<Result> {
-    let newDB = this.dbCategories.map((element) => {
+	constructor(private httpClient: HttpClient) {
+		this.subject = new BehaviorSubject<Category[]>([]);
+	}
+	getCategories(): Observable<Category[]> {
+		this.httpClient.get<Category[]>('http://localhost:3000/categories').subscribe((resp) => {
+			this.dbCategories = resp;
+			this.subject.next(this.dbCategories);
+		});
+
+		return this.subject;
+	}
+	addCategory(item: Category): Promise<Category> {
+		const intRandom = this._ramdonInt(1, 50);
+		item.id = `XXXYYY${intRandom}`;
+		return this.httpClient.post<Category>('http://localhost:3000/categories', item).toPromise();
+	}
+	editCategory(item: Category): Promise<Category> {
+		/*let newDB = this.dbCategories.map((element) => {
       let obj: Category = {};
 
       if (element.id == item.id) {
@@ -47,19 +46,23 @@ export class CategoryMockService implements CategoryService {
 
     return Promise.resolve({
       msgOk: 'Categoría modificada.',
-    });
-  }
-  deleteCategory(item: Category): Promise<Result> {
-    let newDB = this.dbCategories.filter((element) => element.id != item.id);
-    this.dbCategories = newDB as Array<Category>;
-    this.subject.next(this.dbCategories);
+    });*/
 
-    return Promise.resolve({
-      msgOk: 'Categoria eliminada.',
-    });
-  }
+		return this.httpClient
+			.put<Category>(`http://localhost:3000/categories/${item.id}`, item)
+			.toPromise();
+	}
+	deleteCategory(item: Category): Promise<Result> {
+		const newDB = this.dbCategories.filter((element) => element.id != item.id);
+		this.dbCategories = newDB;
+		this.subject.next(this.dbCategories);
 
-  private _ramdonInt(min: number, max: number): number {
-    return min + Math.floor((max - min) * Math.random());
-  }
+		return Promise.resolve({
+			msgOk: 'Categoria eliminada.'
+		});
+	}
+
+	private _ramdonInt(min: number, max: number): number {
+		return min + Math.floor((max - min) * Math.random());
+	}
 }

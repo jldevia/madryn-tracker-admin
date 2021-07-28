@@ -1,0 +1,11 @@
+.container-form-login {
+  display: flex;
+}
+
+.login-form {
+  margin: auto;
+}
+
+.input-login {
+  display: block;
+}

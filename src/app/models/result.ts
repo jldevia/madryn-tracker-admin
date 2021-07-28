@@ -1,6 +1,6 @@
 export interface Result {
-  msgOk?: string;
-  codeErr?: string;
-  nameErr?: string;
-  msgErr?: string;
+	msgOk?: string;
+	codeErr?: string;
+	nameErr?: string;
+	msgErr?: string;
 }

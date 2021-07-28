@@ -1,5 +1,5 @@
 export enum Operation {
-  NEW,
-  EDIT,
-  DELETE,
+	NEW,
+	EDIT,
+	DELETE
 }

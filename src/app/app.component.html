@@ -1,19 +1,18 @@
+<madryntracker-spinner></madryntracker-spinner>
 <mat-sidenav-container>
-  <mat-sidenav mode="push" #menuSide role="navigation">
-    <mat-nav-list>
-      <mat-list-item *ngFor="let item of itemsMenu">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        <a routerLink="{{ item.link }}" (click)="menuSide.close()">{{
-          item.title
-        }}</a>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <madryntracker-header (menuSideToggle)="menuSide.toggle()"></madryntracker-header>
-    <main>
-      <router-outlet></router-outlet>
-    </main>
-    </mat-sidenav-content>
-    </mat-sidenav-container>
+	<mat-sidenav mode="push" #menuSide role="navigation">
+		<mat-nav-list>
+			<mat-list-item *ngFor="let item of itemsMenu">
+				<mat-icon>{{ item.icon }}</mat-icon>
+				<a routerLink="{{ item.link }}" (click)="menuSide.close()">{{ item.title }}</a>
+				<mat-divider></mat-divider>
+			</mat-list-item>
+		</mat-nav-list>
+	</mat-sidenav>
+	<mat-sidenav-content>
+		<madryntracker-header (menuSideToggle)="menuSide.toggle()"></madryntracker-header>
+		<main>
+			<router-outlet></router-outlet>
+		</main>
+	</mat-sidenav-content>
+</mat-sidenav-container>

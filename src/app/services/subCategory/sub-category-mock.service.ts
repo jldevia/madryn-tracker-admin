@@ -1,78 +1,84 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Category } from 'src/app/models/category';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Result } from 'src/app/models/result';
 import { SubCategory } from 'src/app/models/subCategory';
 import { SubCategoryService } from './subCategoryService.interface';
 import { dbSucCategories } from './dbSubCategories';
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root'
 })
 export class SubCategoryMockService implements SubCategoryService {
-  private dbSubCategories: SubCategory[];
-  private obsSubCategories: BehaviorSubject<SubCategory[]>;
+	private dbSubCategories: SubCategory[] = [];
+	private obsSubCategories: BehaviorSubject<SubCategory[]>;
 
-  constructor() {
-    //Se inicializa la BD
-    this.dbSubCategories = dbSucCategories as Array<SubCategory>;
-    this.obsSubCategories = new BehaviorSubject<SubCategory[]>(
-      this.dbSubCategories
-    );
-  }
-  getSubCategories(categoryId: string | undefined): Observable<SubCategory[]> {
-    if (typeof categoryId !== 'undefined') {
-      let result = this.dbSubCategories.filter(
-        (item) => item.categoryId === categoryId
-      );
-      this.obsSubCategories.next(result);
-    }
+	constructor() {
+		//Se inicializa el observer
+		this.obsSubCategories = new BehaviorSubject<SubCategory[]>(this.dbSubCategories);
+	}
+	addSubCategory(item: SubCategory): Promise<SubCategory> {
+		throw new Error('Method not implemented.');
+	}
+	editSubCategory(item: SubCategory): Promise<SubCategory> {
+		throw new Error('Method not implemented.');
+	}
 
-    return this.obsSubCategories;
-  }
-  getSubCategoriesAll(): Observable<SubCategory[]> {
-    this.obsSubCategories.next(this.dbSubCategories);
-    return this.obsSubCategories;
-  }
-  addSubCategory(item: SubCategory): Promise<Result> {
-    let intRandom = this._ramdonInt(1, 100);
-    item.id = `SUBCAT${intRandom}`;
-    this.dbSubCategories.push(item);
-    this.obsSubCategories.next(this.dbSubCategories);
-    return Promise.resolve({
-      msgOk: 'Sub-Categoría creada.',
-    });
-  }
-  editSubCategory(item: SubCategory): Promise<Result> {
-    let editedDB = this.dbSubCategories.map((value) => {
-      let obj: SubCategory;
-      if (value.id === item.id) {
-        obj = item;
-      } else {
-        obj = value;
-      }
+	getSubCategories(key: string | undefined): Observable<SubCategory[]> {
+		if (typeof key === 'undefined') {
+			throw new Error('Id. de categoria indefinido.');
+		}
 
-      return obj;
-    });
+		return this.getSubCategoriesAll().pipe(
+			map((data) => data.filter((subCategory) => subCategory.categoryId === key))
+		);
+	}
 
-    this.dbSubCategories = editedDB;
-    this.obsSubCategories.next(this.dbSubCategories);
+	getSubCategoriesAll(): Observable<SubCategory[]> {
+		this.dbSubCategories = dbSucCategories as Array<SubCategory>;
+		this.obsSubCategories.next(this.dbSubCategories);
+		return this.obsSubCategories;
+	}
 
-    return Promise.resolve({
-      msgOk: 'Sub-Categoría modificada.',
-    });
-  }
-  deleteSubCategory(item: SubCategory): Promise<Result> {
-    let newDB = this.dbSubCategories.filter((value) => value.id !== item.id);
-    this.dbSubCategories = newDB;
-    this.obsSubCategories.next(this.dbSubCategories);
+	/*addSubCategory(item: SubCategory): Promise<Result> {
+		const intRandom = this._ramdonInt(1, 100);
+		item.id = `SUBCAT${intRandom}`;
+		this.dbSubCategories.push(item);
+		this.obsSubCategories.next(this.dbSubCategories);
+		return Promise.resolve({
+			msgOk: 'Sub-Categoría creada.'
+		});
+	}
+	editSubCategory(item: SubCategory): Promise<Result> {
+		const editedDB = this.dbSubCategories.map((value) => {
+			let obj: SubCategory;
+			if (value.id === item.id) {
+				obj = item;
+			} else {
+				obj = value;
+			}
 
-    return Promise.resolve({
-      msgOk: 'Sub-Categoría eliminada.',
-    });
-  }
+			return obj;
+		});
 
-  private _ramdonInt(min: number, max: number): number {
-    return min + Math.floor((max - min) * Math.random());
-  }
+		this.dbSubCategories = editedDB;
+		this.obsSubCategories.next(this.dbSubCategories);
+
+		return Promise.resolve({
+			msgOk: 'Sub-Categoría modificada.'
+		});
+	}*/
+	deleteSubCategory(item: SubCategory): Promise<Result> {
+		const newDB = this.dbSubCategories.filter((value) => value.id !== item.id);
+		this.dbSubCategories = newDB;
+		this.obsSubCategories.next(this.dbSubCategories);
+
+		return Promise.resolve({
+			msgOk: 'Sub-Categoría eliminada.'
+		});
+	}
+
+	private _ramdonInt(min: number, max: number): number {
+		return min + Math.floor((max - min) * Math.random());
+	}
 }
