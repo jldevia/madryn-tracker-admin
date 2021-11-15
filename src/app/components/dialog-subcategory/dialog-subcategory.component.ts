@@ -13,4 +13,9 @@ export class DialogSubcategoryComponent implements OnInit {
 
 	// eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
 	ngOnInit(): void {}
+
+	getNameCategory(categoryId: string): string {
+		return this.data.categorias
+			.find(item => item.id  === categoryId)?.nombre || '';
+	}
 }

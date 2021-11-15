@@ -1,6 +1,7 @@
 .map {
   margin: 2px;
-  height: 642px;
+  height: 500px;
+  max-height: 600px;  
 }
 
 .selector {
@@ -10,7 +11,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: 80% 20%;
-  column-gap: 5px;
+  column-gap: 5px;  
 }
 
 .panel-lateral {

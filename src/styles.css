@@ -3,9 +3,9 @@
 html,
 body {
   height: 100%;
-  margin: 0;
+  margin: auto;    
 }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .card-app {
   border-radius: 4px;
@@ -17,28 +17,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: green;
   color: white;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .sanck-bar-danger {
   background-color: crimson;
-  color: black;
+  color: white;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .snack-bar-warning {
   background-color: peru;
   color: white;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .snack-bar-info {
   background-color: lightskyblue;
   color: white;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .overlay {

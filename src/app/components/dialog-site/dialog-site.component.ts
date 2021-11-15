@@ -13,4 +13,13 @@ export class DialogSiteComponent implements OnInit {
 
 	// eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
 	ngOnInit(): void {}
+
+	get latitude() {
+		return this.data.site.location?.latitude || 0;
+	}
+
+	get longitude() {
+		return this.data.site.location?.longitude || 0;
+	}
+	
 }

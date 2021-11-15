@@ -14,5 +14,5 @@ export interface InterestSiteService {
 
 	editSiteInterest(item: SiteInterest): Promise<SiteInterest>;
 
-	deleteSiteInteres(item: SiteInterest): Promise<Result>;
+	deleteSiteIntest(item: SiteInterest): Promise<Result>;
 }

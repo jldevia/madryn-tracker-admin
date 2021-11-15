@@ -14,7 +14,7 @@ export const dbSites = [
 		email: '',
 		web: 'http://www.cadenarayentray.com.ar/inicio-madryn',
 		countVisits: 1554,
-		subCategoryId: 'subz1'
+		subCategoryId: 'DAzL0YChfKci3joCz9k8'
 	},
 	{
 		id: '0002',

@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { DialogSubCategoryData } from 'src/app/models/dialogSubCategoryData';
 import { SubCategory } from 'src/app/models/subCategory';
-import { CategoryMockService } from 'src/app/services/category/category-mock.service';
+import { CategoryFBStore } from 'src/app/services/category/category-firebase.service';
+import { SubCategoryFBStoreService } from 'src/app/services/subCategory/sub-category-fb-store.service';
 import { UtilService } from 'src/app/services/util.service';
-import { SubCategoryMockService } from '../../services/subCategory/sub-category-mock.service';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { DialogSubcategoryComponent } from '../dialog-subcategory/dialog-subcategory.component';
 
@@ -22,15 +22,14 @@ export class ListSubcategoriesComponent {
 	displayedColumns = ['id', 'nombre', 'descripcion', 'editar', 'eliminar'];
 
 	constructor(
-		private serviceSubCat: SubCategoryMockService,
-		private serviceCat: CategoryMockService,
+		private serviceSubCat: SubCategoryFBStoreService,
+		private serviceCat: CategoryFBStore,
 		private utilService: UtilService,
 		private dialog: MatDialog
 	) {
-		this.subCategoriesObs = serviceSubCat.getSubCategoriesAll();
-		this.serviceCat.getCategories().subscribe((data) => {
-			this.categories.push({ id: 'ALL', nombre: 'Todas', descripcion: '' });
-			this.categories.push(...data);
+		this.subCategoriesObs = serviceSubCat.subCategoriesObservable;
+		this.serviceCat.categoriesObservable.subscribe((data) => {
+			this.categories.push( ...data);			
 		});
 	}
 
@@ -49,7 +48,7 @@ export class ListSubcategoriesComponent {
 		dialogReference.afterClosed().subscribe((result: DialogSubCategoryData) => {
 			if (result) {
 				this.serviceSubCat
-					.addSubCategory({
+					.addSubcategory({
 						id: result.id,
 						nombre: result.nombre,
 						descripcion: result.descripcion,
@@ -58,7 +57,7 @@ export class ListSubcategoriesComponent {
 					.then((result) => this.utilService.showMessageSuccess('Subcategoría creada.'))
 					.catch((err) => {
 						console.error(err);
-						this.utilService.showMessageError('Error al guardar nueva Subcategoría');
+						this.utilService.showMessageError(`Error al guardar nueva Subcategoría. ${err}`);
 					});
 			}
 		});
@@ -87,7 +86,7 @@ export class ListSubcategoriesComponent {
 						categoryId: result.categoriaId
 					};
 					this.serviceSubCat
-						.editSubCategory(obj)
+						.editSubcategory(obj)
 						.then((result) =>
 							this.utilService.showMessageSuccess('Subcategoría modificada.')
 						)
@@ -115,23 +114,18 @@ export class ListSubcategoriesComponent {
 		dialogReference.afterClosed().subscribe((result) => {
 			if (result) {
 				this.serviceSubCat
-					.deleteSubCategory(item)
+					.deleteSubcategory(item)
 					.then((result) =>
 						this.utilService.showMessageSuccess('Subcategoría eliminada.')
 					)
 					.catch((err) => {
-						console.error(err);
-						this.utilService.showMessageError('Error al eliminar la Subcategoría');
+						this.utilService.showMessageError(err);
 					});
 			}
 		});
 	}
 
 	onCategoryChanged(): void {
-		if (this.idCategorySelected === 'ALL') {
-			this.subCategoriesObs = this.serviceSubCat.getSubCategoriesAll();
-		} else {
-			this.subCategoriesObs = this.serviceSubCat.getSubCategories(this.idCategorySelected);
-		}
+		this.subCategoriesObs = this.serviceSubCat.getSubcategories(this.idCategorySelected);
 	}
 }

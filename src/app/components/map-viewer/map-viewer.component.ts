@@ -12,21 +12,22 @@ import VectorSource from 'ol/source/Vector';
 import { defaults } from 'ol/interaction';
 import * as Proj from 'ol/proj';
 import { defaults as defaultControls } from 'ol/control';
-import { InterestSiteMockService } from 'src/app/services/sites/interest-site-mock.service';
 import { SiteInterest } from 'src/app/models/siteInterest';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogSiteData } from 'src/app/models/dialogSiteData';
 import { Operation } from 'src/app/models/operation-enum';
 import { DialogSiteComponent } from '../dialog-site/dialog-site.component';
-import { CategoryMockService } from 'src/app/services/category/category-mock.service';
-import { SubCategoryMockService } from 'src/app/services/subCategory/sub-category-mock.service';
 import { Category } from 'src/app/models/category';
 import { SubCategory } from 'src/app/models/subCategory';
 import { MatSelectChange } from '@angular/material/select';
 import { DialogDeleteComponent } from '../dialog-delete/dialog-delete.component';
 import { UtilService } from 'src/app/services/util.service';
 import { Subscription } from 'rxjs';
-import { Result } from 'src/app/models/result';
+import { SitesFBService } from 'src/app/services/sites/sites-fb.service';
+import { GeoPoint } from 'src/app/models/geoPoint';
+import { CategoryFBStore } from 'src/app/services/category/category-firebase.service';
+import { SubCategoryFBStoreService } from 'src/app/services/subCategory/sub-category-fb-store.service';
+import * as firebase from 'firebase/app'
 
 @Component({
 	selector: 'madryntracker-map-viewer',
@@ -44,9 +45,9 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 	private subcriptionGlobal: Subscription;
 
 	constructor(
-		private categoryService: CategoryMockService,
-		private subCategoryService: SubCategoryMockService,
-		private siteService: InterestSiteMockService,
+		private categoryService: CategoryFBStore,
+		private subCategoryService: SubCategoryFBStoreService,
+		private sitesFBService: SitesFBService,
 		private utilService: UtilService,
 		private dialog: MatDialog
 	) {
@@ -58,31 +59,22 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		// load sites
-		const subscriptionSites = this.siteService.getSitesInterestAll().subscribe((data) => {
-			this.sites = data;
-			this.filteredSites = data;
-			this.showSites(this.filteredSites);
-		});
-
-		this.subcriptionGlobal.add(subscriptionSites);
-
 		// load categories
-		const subscriptionCategory = this.categoryService.getCategories().subscribe((data) => {
-			this.categories = data;
+		const subscriptionCategory = this.categoryService
+			.categoriesObservable.subscribe((data) => {
+				this.categories = data;
 		});
 
 		this.subcriptionGlobal.add(subscriptionCategory);
 
-		// load subcategories
-		const subscriptionSubCategories = this.subCategoryService
-			.getSubCategoriesAll()
-			.subscribe((data) => {
-				this.subCategories = data;
-				this.filteredSubCategories = data;
+		const subscriptionSites =  this.sitesFBService
+			.sitesObservable
+			.subscribe( data => {
+				this.sites = data;
+				this.showSites(data);
 			});
-
-		this.subcriptionGlobal.add(subscriptionSubCategories);
+		
+		this.subcriptionGlobal.add(subscriptionSites);	
 	}
 
 	private showSites(sites: SiteInterest[]) {
@@ -126,16 +118,23 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 
 		// New Site
 		this.mapa.on('dblclick', (evt) => {
+			
+			if (!this.filteredSubCategories) {
+				this.utilService.showMessageError('Debe seleccionar una subcategoría para crear un nuevo sitio de interes.');
+				return;
+			}
+
 			const latLon = Proj.toLonLat([evt.coordinate[0], evt.coordinate[1]]);
 
 			const newSite: SiteInterest = {};
+			const point = new firebase.default.firestore.GeoPoint(latLon[1], latLon[0]);
+			
 			newSite.name = '';
 			newSite.description = '';
 			newSite.address = '';
 			newSite.hoursAttention = '';
 			newSite.ranking = 0;
-			newSite.longitude = latLon[0];
-			newSite.latitude = latLon[1];
+			newSite.location = point;
 			newSite.phone1 = '';
 			newSite.phone2 = '';
 			newSite.email = '';
@@ -144,7 +143,7 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 			const objConfig = {
 				title: 'Nuevo Sitio',
 				site: newSite,
-				subcategories: [{ nombre: 'Subcategoría 1' }, { nombre: 'Subcategoria 2' }]
+				subcategories: this.filteredSubCategories
 			} as DialogSiteData;
 
 			this.openDialog(objConfig, Operation.NEW);
@@ -156,7 +155,7 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 		sites.forEach((element) => {
 			const point = new Feature({
 				geometry: new Point(
-					Proj.fromLonLat([element.longitude || 0, element.latitude || 0])
+					Proj.fromLonLat([element.location?.longitude || 0, element.location?.latitude || 0])
 				)
 			});
 
@@ -201,50 +200,48 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 	}
 
 	editSite(site: SiteInterest): void {
-		this.siteService
+		this.sitesFBService
 			.editSiteInterest(site)
-			.then((resp: SiteInterest) => {
-				this.sites.forEach((item) => {
-					if (item.id === resp.id) {
-						item = resp;
-					}
-				});
+			.then((value) => {
 				this.utilService.showMessageSuccess('Sitio de interes modificado.');
 			})
-			.catch((err: Result) =>
-				this.utilService.showMessageError(`${err.codeErr!} - ${err.msgErr!}`)
+			.catch((err) =>
+				this.utilService.showMessageError(`Error al modificar sitio. Err: ${err}`)
 			);
 	}
 
 	saveSite(site: SiteInterest): void {
-		this.siteService
-			.addSiteInterest(site)
+		this.sitesFBService
+			.addSite(site)
 			.then((resp: SiteInterest) => {
-				this.sites.push(resp);
 				this.utilService.showMessageSuccess('Sitio de interes creado.');
 			})
-			.catch((err: Result) =>
+			.catch((err) =>
 				this.utilService.showMessageError(`${err.codeErr!} - ${err.msgErr!}`)
 			);
 	}
 
 	onCategoryChanged(event: MatSelectChange): void {
-		this.filteredSubCategories = this.subCategories.filter(
-			(subcategory) => subcategory.categoryId === event.value
-		);
-		this.showSites([]);
+		const subscription = this.subCategoryService
+			.getSubcategories(event.value)
+			.subscribe( data => {
+				this.filteredSubCategories = data;
+				this.showSites([]);
+			} );
+		this.subcriptionGlobal.add(subscription);	
+		
 	}
 
 	onSubCategoryChanged(event: MatSelectChange): void {
-		this.filteredSites = this.sites.filter((site) => site.subCategoryId === event.value);
-		this.showSites(this.filteredSites);
+		void this.sitesFBService
+			.getSites(event.value);		
 	}
 
 	onUpdateSite(site: SiteInterest): void {
 		const objConfig = {
 			title: 'Editando Sitio',
 			site: site,
-			subcategories: [{ nombre: 'Subcategoría 1' }, { nombre: 'Subcategoria 2' }]
+			subcategories: this.filteredSubCategories
 		} as DialogSiteData;
 
 		this.openDialog(objConfig, Operation.EDIT);
@@ -262,11 +259,12 @@ export class MapViewerComponent implements OnInit, OnDestroy {
 
 		dialogReference.afterClosed().subscribe((result) => {
 			if (result) {
-				void this.siteService
-					.deleteSiteInteres(site)
-					.then((result: Result) =>
+				void this.sitesFBService
+					.deleteSiteInterest(site)
+					.then((value) =>
 						this.utilService.showMessageError('Sitio de interes eliminado.')
-					);
+					)
+					.catch( err => this.utilService.showMessageError(err));
 			}
 		});
 	}

@@ -107,8 +107,7 @@ export class ListCategoriesComponent {
 					.deleteCategory(category)
 					.then(() => this.utilService.showMessageSuccess('Categoría eliminada.'))
 					.catch((err) => {
-						console.error(err);
-						this.utilService.showMessageError('Error al eliminar categoría.');
+						this.utilService.showMessageError(err);
 					});
 			}
 		});

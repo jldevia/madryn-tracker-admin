@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { Category } from 'src/app/models/category';
 import { LoadingService } from '../loading.service';
+import { SubCategoryFBStoreService } from '../subCategory/sub-category-fb-store.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,7 +18,9 @@ export class CategoryFBStore {
 	get categoriesValues(): Category[] {
 		return this.categories;
 	}
-	constructor(private firestore: AngularFirestore, private loadingService: LoadingService) {
+	constructor(private firestore: AngularFirestore,
+		private loadingService: LoadingService,
+		private subCategoryService: SubCategoryFBStoreService) {
 		this.getAllCategories().subscribe((data) => {
 			this.categories = data;
 			this.categories$.next(this.categories);
@@ -71,7 +74,13 @@ export class CategoryFBStore {
 				return category;
 			});
 	}
-	deleteCategory(category: Category): Promise<void> {
+	async deleteCategory(category: Category): Promise<void> {
+		const numberSubcategories = await this.subCategoryService.numberOfSubcategories(category);
+
+		if (numberSubcategories > 0) {
+			return Promise.reject(new Error('La categoría tienen subcategorías asociadas.'));
+		}
+
 		return this.firestore
 			.doc<Category>(`categorias/${category.id!}`)
 			.delete()

@@ -60,22 +60,20 @@
 			<mat-label>Latitud</mat-label>
 			<input
 				matInput
-				required="true"
+				readonly
 				placeholder="Latitud"
 				type="number"
-				[(ngModel)]="data.site.latitude"
-				name="latitud"
+				value="{{latitude}}"				
 			/>
 		</mat-form-field>
 		<mat-form-field class="input-form">
 			<mat-label>Longitud</mat-label>
 			<input
 				matInput
-				required="true"
+				readonly
 				placeholder="Longitud"
 				type="number"
-				[(ngModel)]="data.site.longitude"
-				name="longitud"
+				value="{{longitude}}"				
 			/>
 		</mat-form-field>
 		<mat-form-field class="input-form">

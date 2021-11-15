@@ -24,7 +24,7 @@
 		<div class="grid-container">
 			<div id="map" class="map"></div>
 			<mat-list class="panel-lateral">
-				<mat-list-item *ngFor="let site of filteredSites">
+				<mat-list-item *ngFor="let site of sites">
 					<h3 mat-line>{{ site.name }}</h3>
 					<mat-label mat-line>{{ site.address }}</mat-label>
 					<button mat-icon-button (click)="onUpdateSite(site)">

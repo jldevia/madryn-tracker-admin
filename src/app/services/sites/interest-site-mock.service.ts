@@ -118,7 +118,7 @@ export class InterestSiteMockService implements InterestSiteService {
 		return Promise.resolve(item);
 	}
 
-	deleteSiteInteres(item: SiteInterest): Promise<Result> {
+	deleteSiteIntest(item: SiteInterest): Promise<Result> {
 		const newDB = this.dbSitesInterst.filter((element) => element.id != item.id);
 		this.dbSitesInterst = newDB;
 		this.result$.next(this.dbSitesInterst);
